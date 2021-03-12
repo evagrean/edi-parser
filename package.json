@@ -1,0 +1,20 @@
+{
+  "name": "edi-parser",
+  "version": "1.0.0",
+  "description": "A parser to convert .edi files to XML format",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "run": "tsc && node src/index.js SLSRPT_Gusti_demo.edi out.xml",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eva Greiner-Anzenbacher",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^9.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.8",
+    "@types/node": "^14.14.33"
+  }
+}
