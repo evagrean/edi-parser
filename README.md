@@ -1,6 +1,6 @@
 # EDI Parser
 
-Parser, der aus Dateien im `EDIFACT` Format (Dateiendung `.edi`) eine Datei im `XML` Format generiert. Das Programm bezieht sich speziell auf die Verarbeitung der Syntax und Codes einer SLSRPT-Nachrichtentyps (Sales Report). Die Input-Datei wird als Command-Line Argument übergeben. Nach der Verarbeitung wird eine `slsrpt.xml` Datei als Output generiert und ist im Projektordner verfügbar (siehe `run-script`).
+Parser, der aus Dateien im `EDIFACT` Format (Dateiendung `.edi`) eine Datei im `XML` Format generiert. Das Programm bezieht sich speziell auf die Verarbeitung von Syntax und Codes des SLSRPT-Nachrichtentyps (Sales Report). Die Input-Datei wird als Command-Line Argument übergeben. Nach der Verarbeitung wird eine `slsrpt.xml` Datei als Output generiert und ist im Projektordner verfügbar (siehe `run-script`).
 
 ## Tech Stack
 
@@ -8,8 +8,6 @@ Parser, der aus Dateien im `EDIFACT` Format (Dateiendung `.edi`) eine Datei im `
 - Node
 
 ## Erste Schritte
-
-Hinweise, um eine Kopie des Projekts lokal auszuführen finden sich im folgenden Abschnitt.
 
 ### Voraussetzungen
 
@@ -19,7 +17,7 @@ Um die Anwendung korrekt ausführen zu können, muss TypeScript installiert sein
 npm install -g typescrip
 ```
 
-oder Projektbasiert z.B. via
+oder projektbasiert z.B. via
 
 ```
 npm install typescript --save-dev
@@ -27,17 +25,15 @@ npm install typescript --save-dev
 
 ### Installation
 
-Das Projekt kann einfach via Button geclont oder als ZIP heruntergeladen werden. Anschließend die nötigen Dependencies via
+Das Projekt kann einfach via Button geclont oder als ZIP heruntergeladen werden. Anschließend die nötigen Dependencies installieren:
 
 ```
 npm install
 ```
 
-installieren.
-
 ### Ausführen
 
-Die Anwendung enthält im `assets` Ordner eine Beispieldatei im `.edi` Format. Via dem Run Script `tsc && node src/index.js assets/SLSRPT_EXAMPLE.edi slsrpt.xml` kann sofort eine XML Beispieldatei generiert werden. Diese wird momentan im Root Ordner des Projekts gespeichert.
+Die Anwendung enthält im `assets` Ordner eine Beispieldatei im `.edi` Format. Via `tsc && node src/index.js assets/SLSRPT_EXAMPLE.edi slsrpt.xml` kann sofort eine XML Beispieldatei generiert werden. Diese wird momentan im Root Ordner des Projekts gespeichert.
 
 ### Beispiel Input und Output
 
@@ -62,7 +58,7 @@ Parsing bedeutet, die zugrundeliegende Daten-Struktur des Inputs zu finden und d
 
 ### `index.ts`
 
-Hier wird die EDI-Datei aus den Command-Line Argumenten ausgelesen, mittels Nodes File System Funktion `fs.readFile()` gelesen und zur weiteren Verarbeitung ein ein String Format gebracht. Anschliesend geparst (`parseData()`). Der Dateiname wird aus den Command-Line Argumenten geholt und schließlich die Datei mittels `fs.writeFile()` in geschrieben.
+Hier wird die EDI-Datei aus den Command-Line Argumenten ausgelesen, mittels Nodes File System Funktion `fs.readFile()` gelesen und zur weiteren Verarbeitung in ein String Format gebracht. Die geparsten Daten werden schließlich mittels `fs.writeFile()` in eine `slsrpt.xml` Datei geschrieben.
 
 ### `screener.ts`
 
