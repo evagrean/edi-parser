@@ -1,6 +1,9 @@
 import { SegmentObject } from "./types.js";
-
-export const getSegmentObjects = (ediData: string) => {
+/**
+ * Creates an array of segmentObjects
+ * @param ediData data from .edi input file in string format
+ */
+export const createSegmentsCollection = (ediData: string) => {
   const segmentsCollection: SegmentObject[] = [];
   const segments = getSegments(ediData);
 
@@ -13,7 +16,7 @@ export const getSegmentObjects = (ediData: string) => {
 };
 /**
  * Creates an array from ediData string containing every segment from edi-file as a seperate string
- * @param ediData stringified data from .edi input file
+ * @param ediData data from .edi input file in string format
  */
 const getSegments = (ediData: string): string[] => {
   const segmentDeliminator = "'";
@@ -22,7 +25,10 @@ const getSegments = (ediData: string): string[] => {
   const filteredSegments = segments.filter((e) => e);
   return filteredSegments;
 };
-
+/**
+ * Creates an array from segment data containing the composites of a single segment
+ * @param segment string of entire segment
+ */
 const getComposites = (segment: string): string[] => {
   const compositesDeliminator = "+";
   const composites = segment.split(compositesDeliminator);
@@ -30,6 +36,10 @@ const getComposites = (segment: string): string[] => {
   return filteredComposites;
 };
 
+/**
+ * Creates an array of data elements out of the composites. Doesn't work properly at the Moment when there is more than 1 composite to split
+ * @param composite composite of segment
+ */
 const getDataElements = (composite: string): string[] => {
   const dataElementsDeliminator = ":";
 
@@ -38,7 +48,10 @@ const getDataElements = (composite: string): string[] => {
 
   return filteredDataElements;
 };
-
+/**
+ * Makes an Object out of segment data so it can be then accessed for parsing
+ * @param segment segment of edi data in string format
+ */
 const toObject = (segment: string) => {
   const composites = getComposites(segment);
 

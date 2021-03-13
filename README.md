@@ -43,3 +43,16 @@ Parsing bedeutet, die zugrundeliegende Daten-Struktur des Inputs zu finden. Die 
 - Abweichender Währungscode: hier via conditions noch wonaders hinschieben (evtl. innerhalb sales)
 - Verkaufs- und Reoureneinheiten evtl. noch zusammenfassen
 - Conditions, um z.B. aus PRI+AAB auszulesen, ob brutto oder netto
+
+## Was ich noch machen würden, wenn ich mehr Zeit habe:
+
+- types
+- refactoring
+- MOA / Fremdwährung auskoppeln
+- Regeln / conditions für bestimmte EDI Codes, um parser noch universaler zu machen
+
+## Probleme beim Importieren der Daten in Warenwirtschaft
+
+- welche Felder braucht die Warenwirtschaft - demnach müssen Tags oder Attribute im XML angepasst werden
+- kann Warenwirtschaft z.B. EDI Codes oder muss das vom Parser übersetzt werden?
+- Falls Fehler auftreten und ggf. Tags fehlen, bleiben auch Felder in der Warenwirtschaft leer.

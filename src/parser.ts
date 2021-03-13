@@ -1,7 +1,10 @@
-import { getSegmentObjects } from "./screener.js";
-
+import { createSegmentsCollection } from "./screener.js";
+/**
+ * Parses through the edi data via segment object and generates XML templates according to given conditions
+ * @param ediData data from .edi input file in string format
+ */
 export const parseData = (ediData: string) => {
-  const segmentsCollection = getSegmentObjects(ediData);
+  const segmentsCollection = createSegmentsCollection(ediData);
   const headerCollection: string[] = [];
   const salesCollection: string[] = [];
   const returnsCollection: string[] = [];
@@ -119,7 +122,10 @@ export const parseData = (ediData: string) => {
 
   return xmlDocument;
 };
-
+/**
+ * Little helper function to get rid of commas inside XML data
+ * @param collection collection of xml strings for header, sales, return or footer sections of xml file
+ */
 const removeCommasFromCollection = (collection: string[]): string => {
   const collectionWithoutComma = collection.toString().replace(/,/g, "");
   return collectionWithoutComma;
