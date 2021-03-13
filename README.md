@@ -1,58 +1,87 @@
 # EDI Parser
 
-Parser, der Dateien im EDIFACT Format (Dateiendung `.edi`) in `XML` Format umwandelt.
+Parser, der aus Dateien im `EDIFACT` Format (Dateiendung `.edi`) eine Datei im `XML` Format generiert. Das Programm bezieht sich speziell auf die Verarbeitung der Syntax und Codes einer SLSRPT-Nachrichtentyps (Sales Report). Die Input-Datei wird als Command-Line Argument übergeben. Nach der Verarbeitung wird eine `slsrpt.xml` Datei als Output generiert und ist im Projektordner verfügbar (siehe `run-script`).
 
------------------------------- Work in Progress -------------------------------------
+## Tech Stack
 
-## Funktionsweise / Programmierung
+- TypeScript
+- Node
 
-Der Parser ist eine modulare Node Anwendung, programmiert mit TypeScript. Momentan wird die EDI Input-Datei als Command-Line Argument übergeben. Nach der Verarbeitung wird eine out.xml Datei als Output generiert.
+## Erste Schritte
 
-## Aufbau / Module in `src`
+Hinweise, um eine Kopie des Projekts lokal auszuführen finden sich im folgenden Abschnitt.
+
+### Voraussetzungen
+
+Um die Anwendung korrekt ausführen zu können, muss TypeScript installiert sein. Entweder global z.B via
+
+```
+npm install -g typescrip
+```
+
+oder Projektbasiert z.B. via
+
+```
+npm install typescript --save-dev
+```
+
+### Installation
+
+Das Projekt kann einfach via Button geclont oder als ZIP heruntergeladen werden. Anschließend die nötigen Dependencies via
+
+```
+npm install
+```
+
+installieren.
+
+### Ausführen
+
+Die Anwendung enthält im `assets` Ordner eine Beispieldatei im `.edi` Format. Via dem Run Script `tsc && node src/index.js assets/SLSRPT_EXAMPLE.edi slsrpt.xml` kann sofort eine XML Beispieldatei generiert werden. Diese wird momentan im Root Ordner des Projekts gespeichert.
+
+### Beispiel Input und Output
+
+#### Input
+
+<img src="img/edi-input.png">
+
+#### Output
+
+<img src="img/xml-output.png">
+
+## Aufbau und Konzept der Anwendung
+
+#### Module
 
 - `index.ts`
 - `types.ts`
 - `screener.ts`
 - `parser.ts`
 
-## Konzept / Herangehensweise
+Parsing bedeutet, die zugrundeliegende Daten-Struktur des Inputs zu finden und die Daten zur Weiterverarbeitung zu extrahieren. Aus diesem Grund besteht der vorliegende Parser aus zwei Teilen. Einem `Screener` und einem `Parser`.
 
-Parsing bedeutet, die zugrundeliegende Daten-Struktur des Inputs zu finden. Die Struktur wird also bestimmt und die Daten extrahiert.
+### `index.ts`
 
-1. EDI-Datei wird übergeben und mittels der Node File System Funktion `fs.readFile()` gelesen und mittels `toString()` zur weiteren Verarbeitung in ein String Format gebracht.
+Hier wird die EDI-Datei aus den Command-Line Argumenten ausgelesen, mittels Nodes File System Funktion `fs.readFile()` gelesen und zur weiteren Verarbeitung ein ein String Format gebracht. Anschliesend geparst (`parseData()`). Der Dateiname wird aus den Command-Line Argumenten geholt und schließlich die Datei mittels `fs.writeFile()` in geschrieben.
 
-2. `screener.ts`: Die EDI-Delimiter (`'`, `+`, `:`) werden benutzt, um mit `slice()` den Input in entsprechene Abschnitte und Elemente aufzuteilen. Hierbei werden `Segmente` durch `' ` getrennt, `Composites` durch `+` und `Data Elements` durch `:`.
+### `screener.ts`
 
-3. Ziel ist es, die ausgelesenen Elemente in eine gut lesbare Struktur zu bringen (z.B. Segment-Objekte), die anschließend XML Templates übergeben werden können. Daraus wird am Schluss eine komplette XML-Datei generiert.
+Hier werden die EDI-Daten mittels standardisierter EDI-Delimiter (`'`, `+`, `:`) in Segmente , Composites und Daten-Elemente aufgeteilt. Die ausgelesenen Daten werden mit Hilfe eines `segmentObject` in eine gut auslesbare Struktur gebracht und anschließend in einer `segmentsCollection` gespeichert.
 
-## Herausforderungen
+### `parser.ts`
 
-- EDI Format lesen und verstehen können
-- EDI Struktur verstehen: z.B. geschachtelte Segmente
-- Soll die EDI-Datei anschließend Zeile für Zeile in XML umgewandelt werden oder evtl. Gruppen zusammengefasst?
-- XML-Tags: welche Namen sollen sie haben? Was ist Wichtig für die anschließende Übergabe in die Warenwirtschaft? Daten eher als Attribute oder zwischen den Tags?
-- Segmentnamen nicht auch noch in composites array auflisten, sprich: es sollte eigentlich nur alles ab index=1 übernommen werden
-- Types und Interfaces für z.B. segmentObject;
-- Hinzufügen eines Modul Bundlers wie etwa Webpack, dann könnte code in Browser ausgeführt werden
-- als npm package bereitstellen
-- Problem bei getDataElements für UNB Tag, da es hier mehrere Composites gibt, die in Elemente geteilt werden können. Da aber dieses Segment für die Verarbeitung im Warenwirtschaftssystem wahrscheinlich nicht so wichtig ist, erst mal nach hinten geschoben.
-- Fehlermeldung bei XML Datei, wenn Öffnung im Browser: "Extra content in document". Das sind Kommas aus den Arrays, in denen die XML Templates daherkommen
-- keine Ahnung, ob man den Segmentnamen aus der EDI Nachricht noch braucht....
-- sales und Retouren müssen irgendwie vorher schon zusammengefasst werden, oder?
-- im Moment keine verschachtelten Tags
-- Abweichender Währungscode: hier via conditions noch wonaders hinschieben (evtl. innerhalb sales)
-- Verkaufs- und Reoureneinheiten evtl. noch zusammenfassen
-- Conditions, um z.B. aus PRI+AAB auszulesen, ob brutto oder netto
+Hier iteriert eine `parseData()` Funktion über die `segmentsCollection`, fragt Segment-Namen ab und übergibt die jeweiligen Objekt-Daten an ein XML-Snippet. Abhängig von Segment-Namen und weiterer Angaben (z.B. vorhandene "Verkauf" oder "Retoure" Composites) werden die XML-Snippets in entsprechene Arrays bzw. Collections geschoben (`headerCollection`, `salesCollection`, `returnsCollection`, `footerCollection`). Diese Collections werden dann in ein Template Literal eingefügt, welches das Grundgerüst der neuen XML-Datei bildet. `parseData()` gibt dieses als Variable `xmlData` im String-Format zurück.
 
-## Was ich noch machen würden, wenn ich mehr Zeit habe:
+## TODOS, Bugs, Probleme mit Warenwirtschaft
 
-- types
-- refactoring
-- MOA / Fremdwährung auskoppeln
-- Regeln / conditions für bestimmte EDI Codes, um parser noch universaler zu machen
+Der Code für diesen Parser wurde innerhalb von zwei Tagen erstellt. Nachfolgend einige Angaben zu Bugs und Funktionsweisen, die noch überarbeitet werden müssen. Außerdem Überlegungen zu Problemen beim Import der generierten Daten in ein Warenwirtschaftssystem.
 
-## Probleme beim Importieren der Daten in Warenwirtschaft
+- Abhängig davon, wie wichtig Daten aus dem Header einer EDI-Message z.B. für den Import in ein Warenwirtschaftssystem sind, müssen XML-Tags oder Attribute angepasst werden
 
-- welche Felder braucht die Warenwirtschaft - demnach müssen Tags oder Attribute im XML angepasst werden
-- kann Warenwirtschaft z.B. EDI Codes oder muss das vom Parser übersetzt werden?
-- Falls Fehler auftreten und ggf. Tags fehlen, bleiben auch Felder in der Warenwirtschaft leer.
+- Generell gilt: Für den Import in ein Warenwirtschaftssystem müssen die generierten XML-Snipptes und gewählten Namen für XML-Tags und -Attribute angepasst werden, um alle notwendigen Feld-Daten liefern zu können
+
+- Die verarbeitete EDI-Datei enthält Segmente, die einen abweichenden Währungscode aufweisen. In der vorliegenden Version des Parsers werden diese noch nicht separat verarbeitet, sondern mit der `salesCollection` übergeben. Dies sollte bei einer Überarbeitung noch angepasst werden.
+
+- Der Algorithmus, der die einzelnen Daten-Elemente aus den Composites ausliest, funtioniert im Moment nur für Composites-Arrays, die lediglich ein Composite enthalten, das aus Daten-Elementen zusammengesetzt ist. Im Falle von `UNB` Segmenten, wo es mehrere solcher Composites gibt, werden die Elemente nicht richtig ausgelesen.
+
+- Um den Parser universaler zu machen, könnte noch eine Art Regel-Sammlung für EDI-Codes bereitgestellt werden, die diese in XML-Tags o.ä. übersetzt (z.B. direkt aus `PRI+AAB` auszulesen, ob brutto oder netto Preis). Die Frage ist auch, ob ein Warenwirtschaftssystem solche EDI-Codes lesen kann, oder ob dies in anderer Form übergeben werden muss.
