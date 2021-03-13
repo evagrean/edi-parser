@@ -14,7 +14,7 @@ Parser, der aus Dateien im `EDIFACT` Format (Dateiendung `.edi`) eine Datei im `
 Um die Anwendung korrekt ausführen zu können, muss TypeScript installiert sein. Entweder global z.B via
 
 ```
-npm install -g typescrip
+npm install -g typescript
 ```
 
 oder projektbasiert z.B. via
@@ -33,7 +33,7 @@ npm install
 
 ### Ausführen
 
-Die Anwendung enthält im `assets` Ordner eine Beispieldatei im `.edi` Format. Via `tsc && node src/index.js assets/SLSRPT_EXAMPLE.edi slsrpt.xml` kann sofort eine XML Beispieldatei generiert werden. Diese wird momentan im Root Ordner des Projekts gespeichert.
+Die Anwendung enthält im `assets` Ordner eine Beispieldatei im `.edi` Format. Via `tsc && node src/index.js assets/SLSRPT_EXAMPLE.edi slsrpt.xml` kann sofort eine XML Beispieldatei generiert werden. Diese wird im Root Ordner des Projekts gespeichert.
 
 ### Beispiel Input und Output
 
@@ -62,11 +62,11 @@ Hier wird die EDI-Datei aus den Command-Line Argumenten ausgelesen, mittels Node
 
 ### `screener.ts`
 
-Hier werden die EDI-Daten mittels standardisierter EDI-Delimiter (`'`, `+`, `:`) in Segmente , Composites und Daten-Elemente aufgeteilt. Die ausgelesenen Daten werden mit Hilfe eines `segmentObject` in eine gut auslesbare Struktur gebracht und anschließend in einer `segmentsCollection` gespeichert.
+Hier werden die EDI-Daten mittels standardisierter EDI-Delimiter (`'`, `+`, `:`) in Segmente, Composites und Daten-Elemente aufgeteilt. Die ausgelesenen Daten werden mit Hilfe eines `segmentObject` in eine gut auslesbare Struktur gebracht und anschließend in einer `segmentsCollection` gespeichert.
 
 ### `parser.ts`
 
-Hier iteriert eine `parseData()` Funktion über die `segmentsCollection`, fragt Segment-Namen ab und übergibt die jeweiligen Objekt-Daten an ein XML-Snippet. Abhängig von Segment-Namen und weiterer Angaben (z.B. vorhandene "Verkauf" oder "Retoure" Composites) werden die XML-Snippets in entsprechene Arrays bzw. Collections geschoben (`headerCollection`, `salesCollection`, `returnsCollection`, `footerCollection`). Diese Collections werden dann in ein Template Literal eingefügt, welches das Grundgerüst der neuen XML-Datei bildet. `parseData()` gibt dieses als Variable `xmlData` im String-Format zurück.
+Hier iteriert eine `parseData()` Funktion über die `segmentsCollection`, fragt Segment-Namen ab und übergibt die jeweiligen Objekt-Daten an ein XML-Snippet. Abhängig von Segment-Namen und weiterer Angaben (z.B. vorhandene "Verkauf" oder "Retoure" Composites) werden die XML-Snippets in entsprechende Arrays bzw. Collections geschoben (`headerCollection`, `salesCollection`, `returnsCollection`, `footerCollection`). Diese Collections werden dann in ein Template Literal eingefügt, welches das Grundgerüst der neuen XML-Datei bildet. `parseData()` gibt dieses als Variable `xmlData` im String-Format zurück.
 
 ## TODOS, Bugs, Probleme mit Warenwirtschaft
 
@@ -78,6 +78,6 @@ Der Code für diesen Parser wurde innerhalb von zwei Tagen erstellt. Nachfolgend
 
 - Die verarbeitete EDI-Datei enthält Segmente, die einen abweichenden Währungscode aufweisen. In der vorliegenden Version des Parsers werden diese noch nicht separat verarbeitet, sondern mit der `salesCollection` übergeben. Dies sollte bei einer Überarbeitung noch angepasst werden.
 
-- Der Algorithmus, der die einzelnen Daten-Elemente aus den Composites ausliest, funtioniert im Moment nur für Composites-Arrays, die lediglich ein Composite enthalten, das aus Daten-Elementen zusammengesetzt ist. Im Falle von `UNB` Segmenten, wo es mehrere solcher Composites gibt, werden die Elemente nicht richtig ausgelesen.
+- Der Algorithmus, der die einzelnen Daten-Elemente aus den Composites ausliest, funktioniert im Moment nur für Composites-Arrays, die lediglich ein Composite enthalten, das aus Daten-Elementen zusammengesetzt ist. Im Falle von `UNB` Segmenten, wo es mehrere solcher Composites gibt, werden die Elemente nicht richtig ausgelesen.
 
 - Um den Parser universaler zu machen, könnte noch eine Art Regel-Sammlung für EDI-Codes bereitgestellt werden, die diese in XML-Tags o.ä. übersetzt (z.B. direkt aus `PRI+AAB` auszulesen, ob brutto oder netto Preis). Die Frage ist auch, ob ein Warenwirtschaftssystem solche EDI-Codes lesen kann, oder ob dies in anderer Form übergeben werden muss.
