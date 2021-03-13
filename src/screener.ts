@@ -1,14 +1,15 @@
 import { SegmentObject } from "./types.js";
 
 export const getSegmentObjects = (ediData: string) => {
+  const segmentsCollection: SegmentObject[] = [];
   const segments = getSegments(ediData);
-  const segmentsCollection = [];
 
   for (let segment of segments) {
     const segmentObject = toObject(segment);
     segmentsCollection.push(segmentObject);
   }
-  console.log(segmentsCollection);
+
+  return segmentsCollection;
 };
 /**
  * Creates an array from ediData string containing every segment from edi-file as a seperate string
@@ -31,13 +32,16 @@ const getComposites = (segment: string): string[] => {
 
 const getDataElements = (composite: string): string[] => {
   const dataElementsDeliminator = ":";
+
   const dataElements = composite.split(dataElementsDeliminator);
   const filteredDataElements = dataElements.filter((e) => e);
+
   return filteredDataElements;
 };
 
 const toObject = (segment: string) => {
   const composites = getComposites(segment);
+
   const segmentObject: SegmentObject = {
     name: "",
     composites: [],

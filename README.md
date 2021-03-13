@@ -33,3 +33,13 @@ Parsing bedeutet, die zugrundeliegende Daten-Struktur des Inputs zu finden. Die 
 - XML-Tags: welche Namen sollen sie haben? Was ist Wichtig für die anschließende Übergabe in die Warenwirtschaft? Daten eher als Attribute oder zwischen den Tags?
 - Segmentnamen nicht auch noch in composites array auflisten, sprich: es sollte eigentlich nur alles ab index=1 übernommen werden
 - Types und Interfaces für z.B. segmentObject;
+- Hinzufügen eines Modul Bundlers wie etwa Webpack, dann könnte code in Browser ausgeführt werden
+- als npm package bereitstellen
+- Problem bei getDataElements für UNB Tag, da es hier mehrere Composites gibt, die in Elemente geteilt werden können. Da aber dieses Segment für die Verarbeitung im Warenwirtschaftssystem wahrscheinlich nicht so wichtig ist, erst mal nach hinten geschoben.
+- Fehlermeldung bei XML Datei, wenn Öffnung im Browser: "Extra content in document". Das sind Kommas aus den Arrays, in denen die XML Templates daherkommen
+- keine Ahnung, ob man den Segmentnamen aus der EDI Nachricht noch braucht....
+- sales und Retouren müssen irgendwie vorher schon zusammengefasst werden, oder?
+- im Moment keine verschachtelten Tags
+- Abweichender Währungscode: hier via conditions noch wonaders hinschieben (evtl. innerhalb sales)
+- Verkaufs- und Reoureneinheiten evtl. noch zusammenfassen
+- Conditions, um z.B. aus PRI+AAB auszulesen, ob brutto oder netto

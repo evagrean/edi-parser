@@ -1,12 +1,12 @@
 export var getSegmentObjects = function (ediData) {
-    var segments = getSegments(ediData);
     var segmentsCollection = [];
+    var segments = getSegments(ediData);
     for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
         var segment = segments_1[_i];
         var segmentObject = toObject(segment);
         segmentsCollection.push(segmentObject);
     }
-    console.log(segmentsCollection);
+    return segmentsCollection;
 };
 /**
  * Creates an array from ediData string containing every segment from edi-file as a seperate string
